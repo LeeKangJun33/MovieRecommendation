@@ -35,4 +35,22 @@ public class MovieService {
     }
 
 
+    public Movie updateMovie(Long id, Movie updatedMovie) {
+        return movieRepository.findById(id).map(movie -> {
+            movie.setTitle(updatedMovie.getTitle());
+            movie.setDirector(updatedMovie.getDirector());
+            movie.setGenres(updatedMovie.getGenres());
+            movie.setReleaseYear(updatedMovie.getReleaseYear());
+            return movieRepository.save(movie);
+        }).orElseGet(() -> {
+            updatedMovie.setId(id);
+            return movieRepository.save(updatedMovie);
+        });
+    }
+
+    public List<Movie> getMoviesByGenre(String genre) {
+        return movieRepository.findByGenresContaining(genre);
+    }
+
 }
+
