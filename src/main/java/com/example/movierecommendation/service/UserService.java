@@ -6,6 +6,7 @@ import com.example.movierecommendation.entity.UserActivity;
 import com.example.movierecommendation.repository.UserActivityRepository;
 import com.example.movierecommendation.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,14 @@ public class UserService {
 
     @Autowired
     private UserActivityRepository userActivityRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public void registerUser(User user){
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+    }
 
     public UserInfo getUserInfo(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("사용자를 찾을수없습니다."));

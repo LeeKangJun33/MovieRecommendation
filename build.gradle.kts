@@ -28,6 +28,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation ("org.springframework.kafka:spring-kafka")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("com.mysql:mysql-connector-j")
@@ -35,6 +36,7 @@ dependencies {
     runtimeOnly ("com.h2database:h2") // 또는 다른 데이터베이스
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
+
 }
 
 tasks.withType<Test> {
