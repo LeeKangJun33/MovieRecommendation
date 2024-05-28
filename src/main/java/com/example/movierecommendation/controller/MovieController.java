@@ -15,7 +15,6 @@ import java.util.List;
 @RequestMapping("/movies")
 public class MovieController {
 
-
     private final MovieService movieService;
 
     @Autowired
@@ -23,40 +22,54 @@ public class MovieController {
         this.movieService = movieService;
     }
 
-
-    @PostMapping
-    public ResponseEntity<Movie> addMovie(@RequestBody Movie movie){
-        return ResponseEntity.ok(movieService.saveMovie(movie));
+    @GetMapping
+    public List<Movie> getAllMovies() {
+        return movieService.getAllMovies();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Movie> getMovieById(@PathVariable Long id){
-        return movieService.findMovieById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Movie> getMovieById(@PathVariable Long id) {
+        Movie movie = movieService.getMovieById(id);
+        if (movie != null) {
+            return ResponseEntity.ok(movie);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @GetMapping
-    public ResponseEntity<List<Movie>> getAllMovies(){
-
-        return ResponseEntity.ok(movieService.findAllMovies());
+    @PostMapping
+    public ResponseEntity<Movie> createMovie(@RequestBody Movie movie) {
+        Movie savedMovie = movieService.createMovie(movie);
+        return ResponseEntity.ok(savedMovie);
     }
 
     @PutMapping("/{id}")
-    public Movie updateMovie(@PathVariable Long id, @RequestBody Movie movie) {
-        return movieService.updateMovie(id, movie);
+    public ResponseEntity<Movie> updateMovie(@PathVariable Long id, @RequestBody Movie movieDetails) {
+        Movie updatedMovie = movieService.updateMovie(id, movieDetails);
+        if (updatedMovie != null) {
+            return ResponseEntity.ok(updatedMovie);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMovie(@PathVariable Long id){
-        movieService.deleteMovie(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Void> deleteMovie(@PathVariable Long id) {
+        boolean deleted = movieService.deleteMovie(id);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-
-
     @GetMapping("/genre/{genre}")
-    public List<Movie> getMoviesByGenre(@PathVariable String genre) {
-        return movieService.getMoviesByGenre(genre);
+    public ResponseEntity<List<Movie>> getMoviesByGenre(@PathVariable String genre) {
+        List<Movie> movies = movieService.getMoviesByGenre(genre);
+        if (!movies.isEmpty()) {
+            return ResponseEntity.ok(movies);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

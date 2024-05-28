@@ -11,46 +11,52 @@ import java.util.Optional;
 @Service
 public class MovieService {
 
+    private final MovieRepository movieRepository;
+
     @Autowired
-    private MovieRepository movieRepository;
-
-    // 영화 정보를 저장하거나 업데이트.
-    public Movie saveMovie(Movie movie) {
-        return movieRepository.save(movie);
+    public MovieService(MovieRepository movieRepository) {
+        this.movieRepository = movieRepository;
     }
 
-    // 영화 ID에 해당하는 영화를 검색.
-    public Optional<Movie> findMovieById(Long id) {
-        return movieRepository.findById(id);
-    }
-
-    // 모든 영화 목록을 보여주기.
-    public List<Movie> findAllMovies() {
+    public List<Movie> getAllMovies() {
         return movieRepository.findAll();
     }
 
-    // 영화 ID에 해당하는 영화를 삭제.
-    public void deleteMovie(Long id) {
-        movieRepository.deleteById(id);
+    public Movie getMovieById(Long id) {
+        Optional<Movie> optionalMovie = movieRepository.findById(id);
+        return optionalMovie.orElse(null);
     }
 
+    public Movie createMovie(Movie movie) {
+        return movieRepository.save(movie);
+    }
 
-    public Movie updateMovie(Long id, Movie updatedMovie) {
-        return movieRepository.findById(id).map(movie -> {
-            movie.setTitle(updatedMovie.getTitle());
-            movie.setDirector(updatedMovie.getDirector());
-            movie.setGenres(updatedMovie.getGenres());
-            movie.setReleaseYear(updatedMovie.getReleaseYear());
+    public Movie updateMovie(Long id, Movie movieDetails) {
+        Optional<Movie> optionalMovie = movieRepository.findById(id);
+        if (optionalMovie.isPresent()) {
+            Movie movie = optionalMovie.get();
+            movie.setTitle(movieDetails.getTitle());
+            movie.setDirector(movieDetails.getDirector());
+            movie.setReleaseYear(movieDetails.getReleaseYear());
+            movie.setGenres(movieDetails.getGenres());
             return movieRepository.save(movie);
-        }).orElseGet(() -> {
-            updatedMovie.setId(id);
-            return movieRepository.save(updatedMovie);
-        });
+        } else {
+            return null;
+        }
+    }
+
+    public boolean deleteMovie(Long id) {
+        if (movieRepository.existsById(id)) {
+            movieRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public List<Movie> getMoviesByGenre(String genre) {
         return movieRepository.findByGenresContaining(genre);
     }
-
 }
+
 

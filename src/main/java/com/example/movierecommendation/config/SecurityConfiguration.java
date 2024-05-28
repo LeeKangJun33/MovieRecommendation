@@ -30,7 +30,7 @@ public class SecurityConfiguration {
     public UserDetailsService userDetailsService(){
         User.UserBuilder users = User.builder();
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(users.username("user").password(passwordEncoder().encode("")).roles("USER").build());
+        manager.createUser(users.username("user").password(passwordEncoder().encode("password")).roles("USER").build());
         return manager;
     }
 
