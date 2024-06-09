@@ -2,6 +2,7 @@ package com.example.movierecommendation.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "movies")
-
+@Document(collation = "movies")
 public class Movie {
 
     @Id

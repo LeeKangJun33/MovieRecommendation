@@ -11,5 +11,17 @@ import java.util.List;
 public class RecommendationService {
     @Autowired
     private  MovieRepository movieRepository;
+    @Autowired
+    public RecommendationService(MovieRepository movieRepository) {
+        this.movieRepository = movieRepository;
+    }
+
+    public List<Movie> recommendMoviesByGenre(String genre) {
+        return movieRepository.findByGenresContaining(genre);
+    }
+
+    public List<Movie> recommendPopularMovies() {
+        return movieRepository.findTop10ByOrderByPopularityDesc();
+    }
 
 }
